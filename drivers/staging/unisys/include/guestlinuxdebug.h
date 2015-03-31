@@ -26,38 +26,38 @@
 enum driver_pc {		/* POSTCODE driver identifier tuples */
 	/* visorchipset driver files */
 	VISOR_CHIPSET_PC = 0xA0,
-	VISOR_CHIPSET_PC_controlvm_c = 0xA1,
-	VISOR_CHIPSET_PC_controlvm_cm2 = 0xA2,
-	VISOR_CHIPSET_PC_controlvm_direct_c = 0xA3,
-	VISOR_CHIPSET_PC_file_c = 0xA4,
-	VISOR_CHIPSET_PC_parser_c = 0xA5,
-	VISOR_CHIPSET_PC_testing_c = 0xA6,
-	VISOR_CHIPSET_PC_visorchipset_main_c = 0xA7,
-	VISOR_CHIPSET_PC_visorswitchbus_c = 0xA8,
+	VISOR_CHIPSET_PC_CONTROLVM_C = 0xA1,
+	VISOR_CHIPSET_PC_CONTROLVM_CM2 = 0xA2,
+	VISOR_CHIPSET_PC_CONTROLVM_DIRECT_C = 0xA3,
+	VISOR_CHIPSET_PC_FILE_C = 0xA4,
+	VISOR_CHIPSET_PC_PARSER_C = 0xA5,
+	VISOR_CHIPSET_PC_TESTING_C = 0xA6,
+	VISOR_CHIPSET_PC_VISORCHIPSET_MAIN_C = 0xA7,
+	VISOR_CHIPSET_PC_VISORSWITCHBUS_C = 0xA8,
 	/* visorbus driver files */
 	VISOR_BUS_PC = 0xB0,
-	VISOR_BUS_PC_businst_attr_c = 0xB1,
-	VISOR_BUS_PC_channel_attr_c = 0xB2,
-	VISOR_BUS_PC_devmajorminor_attr_c = 0xB3,
-	VISOR_BUS_PC_visorbus_main_c = 0xB4,
+	VISOR_BUS_PC_BUSINST_ATTR_C = 0xB1,
+	VISOR_BUS_PC_CHANNEL_ATTR_C = 0xB2,
+	VISOR_BUS_PC_DEVMAJORMINOR_ATTR_C = 0xB3,
+	VISOR_BUS_PC_VISORBUS_MAIN_C = 0xB4,
 	/* visorclientbus driver files */
 	VISOR_CLIENT_BUS_PC = 0xC0,
-	VISOR_CLIENT_BUS_PC_visorclientbus_main_c = 0xC1,
+	VISOR_CLIENT_BUS_PC_VISORCLIENTBUS_MAIN_C = 0xC1,
 	/* virt hba driver files */
 	VIRT_HBA_PC = 0xC2,
-	VIRT_HBA_PC_virthba_c = 0xC3,
+	VIRT_HBA_PC_VIRTHBA_C = 0xC3,
 	/* virtpci driver files */
 	VIRT_PCI_PC = 0xC4,
-	VIRT_PCI_PC_virtpci_c = 0xC5,
+	VIRT_PCI_PC_VIRTPCI_C = 0xC5,
 	/* virtnic driver files */
 	VIRT_NIC_PC = 0xC6,
-	VIRT_NIC_P_virtnic_c = 0xC7,
+	VIRT_NIC_P_VIRTNIC_C = 0xC7,
 	/* uislib driver files */
 	UISLIB_PC = 0xD0,
-	UISLIB_PC_uislib_c = 0xD1,
-	UISLIB_PC_uisqueue_c = 0xD2,
-	UISLIB_PC_uisthread_c = 0xD3,
-	UISLIB_PC_uisutils_c = 0xD4,
+	UISLIB_PC_UISLIB_C = 0xD1,
+	UISLIB_PC_UISQUEUE_C = 0xD2,
+	UISLIB_PC_UISTHREAD_C = 0xD3,
+	UISLIB_PC_UISUTILS_C = 0xD4,
 };
 
 enum event_pc {			/* POSTCODE event identifier tuples */
