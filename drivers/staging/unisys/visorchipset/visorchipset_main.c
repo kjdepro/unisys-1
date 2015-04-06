@@ -31,6 +31,14 @@
 #include <linux/platform_device.h>
 #include <linux/uuid.h>
 
+#include "consolevideochannel.h"
+#include "consoleframebufferchannel.h"
+#include "consoleframebuffermemorychannel.h"
+#include "visorchannel.h"
+#include "controlframework.h"
+#include "channel_guid.h"
+
+
 #define CURRENT_FILE_PC VISOR_CHIPSET_PC_visorchipset_main_c
 #define TEST_VNIC_PHYSITF "eth0"	/* physical network itf for
 					 * vnic loopback test */
@@ -47,6 +55,28 @@
 * we switch to slow polling mode.  As soon as we get a controlvm
 * message, we switch back to fast polling mode.
 */
+
+static struct visor_channeltype_descriptor unsupported_channel_types[] = {
+	/*  Note that the only channel type we expect to be reported by the
+	 *  bus driver is the CONSOLEVIDEO channel.  The other channel types
+	 *  are simply contained within the CONSOLEVIDEO channel, and we
+	 *  specify them here just so the bus driver knows what their
+	 *  sizes are.  See visorconfb_probe().
+	 */
+	{SPAR_CONSOLEVIDEO_CHANNEL_PROTOCOL_UUID, "video",
+	 CONSOLEVIDEO_CH_SIZE, CONSOLEVIDEO_CH_SIZE},
+	{SPAR_CONSOLEFRAMEBUFFER_CHANNEL_PROTOCOL_UUID, "framebuffer",
+	 CONSOLEFRAMEBUFFER_CH_SIZE, CONSOLEFRAMEBUFFER_CH_SIZE},
+	{SPAR_CONSOLELEGACYVIDEO_CHANNEL_PROTOCOL_UUID, "legacyvideo",
+	 CONSOLELEGACYVIDEO_CH_SIZE, CONSOLELEGACYVIDEO_CH_SIZE},
+	{SPAR_CONSOLEFRAMEBUFFERMEMORY_CHANNEL_PROTOCOL_UUID,
+	 "framebuffermemory",
+	 CONSOLEFRAMEBUFFERMEMORY_CH_SIZE, CONSOLEFRAMEBUFFERMEMORY_CH_SIZE},
+	 {SPAR_CONTROLDIRECTOR_CHANNEL_PROTOCOL_UUID,
+	  "controldirector", 1, ULONG_MAX },
+	{NULL_UUID_LE, NULL, 0, 0}
+};
+
 #define MIN_IDLE_SECONDS 10
 static ulong poll_jiffies = POLLJIFFIES_CONTROLVMCHANNEL_FAST;
 static ulong most_recent_message_jiffies;	/* when we got our last
@@ -1141,6 +1171,17 @@ bus_configure(struct controlvm_message *inmsg,
 		   rc, inmsg->hdr.flags.response_expected == 1);
 }
 
+static bool unhandle_guid(uuid_le uuid)
+{
+	int index;
+	for(index = 0;(uuid_le_cmp(unsupported_channel_types[index].guid, NULL_UUID_LE) != 0);  index++)
+	{
+		if(uuid_le_cmp(unsupported_channel_types[index].guid, uuid) == 0)
+			return true;
+	}
+	return false;
+}
+
 static void
 my_device_create(struct controlvm_message *inmsg)
 {
@@ -1150,6 +1191,18 @@ my_device_create(struct controlvm_message *inmsg)
 	struct visorchipset_device_info *dev_info = NULL;
 	struct visorchipset_bus_info *bus_info = NULL;
 	int rc = CONTROLVM_RESP_SUCCESS;
+
+	if( unhandle_guid(cmd->create_device.data_type_uuid))
+	{
+		tmp= (struct unsupported_list *)malloc(sizeof(struct unsupported_list));
+		&tmp->dev_no = dev_no;
+		&tmp->bus_no = bus_no;
+		&tmp->created = 1;
+		&tmp->guid = cmd->create_device.data_type_uuid;
+		list_add(&(tmp->list), &(dev_info_list.list));
+		//controlvm_respond(&inmsg.hdr, CONTROLVM_RESP_SUCCESS);
+		//return;
+	}
 
 	dev_info = finddevice(&dev_info_list, bus_no, dev_no);
 	if (dev_info && (dev_info->state.created == 1)) {
